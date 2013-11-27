@@ -1,32 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>D'n'd</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript">
-            if (parent && parent.loaded)
-                parent.loaded();
+  <head>
+    <title>Gallery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/basic.css"/>
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/cycle2.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        if(window.sankore) {
+          sankore.enableDropOnWidget(false);
+        }
+        start();                                
+      });
+    </script>
+  </head>
+  <body>       
+    <table class="body_table" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="b_top_left"></td>
+        <td class="b_top_center">
+          <div id="wgt_name"></div>
+          <div id="wgt_help"></div>                    
+          <div id="wgt_display" class="selected"></div>
+          <div id="wgt_edit"></div>                    
+        </td>
+        <td class="b_top_right"><td>
+      </tr>
 
-            $(document).ready(function(){
-                var lang = (window.sankore)?sankore.locale().substr(0,2):"en"; //local language
+      <tr>
+        <td class="b_center_left"></td>
+        <td>
+          <div id="help"></div>
+          <div id="slider">
+            <div id="parameters">
+              <div class="inline">
+                <label>
+                  <select id="style_select">
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                  </select>
+                </label>
+              </div>
+              <label for="index_checkbox"> Show index : </label>
+              <input type="checkbox" id="index_checkbox" checked="checked" />
+            </div>
+            <ul class="cycle-slideshow" data-cycle-slides="li" data-cycle-paused="true" data-cycle-fx="scrollHorz" data-cycle-pager="#custom-pager" data-cycle-pager-template="<span>{{slideNum}}</span>" data-cycle-update-view="1" data-cycle-prev="#prevBtn" data-cycle-next="#nextBtn" data-cycle-log="false">
+            </ul>
+          </div>
+          <span id="prevBtn"><a href="javascript:void(0);"></a></span>
+          <span id="nextBtn"><a href="javascript:void(0);"></a></span>
+        </td>
+        <td class="b_center_right"></td>
+      </tr>     
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'locales/' + lang + '/index.html',
-                    statusCode: {
-                        404: function() {
-                            window.location.href = 'locales/en/index.html';
-                        },
-                        200: function(){
-                            window.location.href = 'locales/' + lang + '/index.html';
-                        }
-                    }
-                });      
-            });
-        </script>
-    </head>
-    <body>       
-        
-    </body>
+      <tr>
+        <td class="b_bottom_left"></td>
+        <td class="b_bottom_center"><div id="custom-pager" class="center"></div></td>
+        <td class="b_bottom_right"></td>
+      </tr>
+    </table>
+  </body>
 </html>
