@@ -10,10 +10,25 @@
     <script type="text/javascript" src="js/script.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
+        var lang = (window.sankore)?sankore.locale().substr(0,2):"en"; //local language
+
+        $.ajax({
+          type: 'POST',
+          url: 'locales/' + lang + '.txt',
+          dataType : 'json',
+          statusCode: {
+            404 : function() {
+            },
+            200 : function(data) {
+              window.sankoreLang = data; 
+              start();                                
+            }
+          }
+        });
+
         if(window.sankore) {
           sankore.enableDropOnWidget(false);
         }
-        start();                                
       });
     </script>
   </head>
