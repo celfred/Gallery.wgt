@@ -9,6 +9,7 @@
   "pad": "Tablet",
   "none": "None",
   "speed": "Speed",
+  "random": "Random Picker",
   "index": "Show index",
   "help": "Help",
   "theme": "Theme",

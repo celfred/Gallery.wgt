@@ -25,8 +25,7 @@ function start(){
   $("#style_select").prev('label').text(sankoreLang.theme);
   $("#speed").prev('label').text(sankoreLang.speed);
   $("#index_checkbox").prev('label').text(sankoreLang.index);
-  //var tmpl = $("div.inline label").html();
-  //$("div.inline label").html(sankoreLang.theme + tmpl)
+  $("#random").prev('label').text(sankoreLang.random);
     
   if (window.sankore) {
     if(sankore.preference("etudier","")){
@@ -69,6 +68,26 @@ function start(){
       $('#controls').hide();
     }
   })
+
+  $('#random').click( function() {
+    if ( $(this).is(':checked') ) {
+      // Show random
+      $('#randomLink').show();
+    } else {
+      // Hide random
+      $('#randomLink').hide();
+    }
+  })
+
+  $('#randomLink').click( function() {
+    var currentSlide = sudoSlider.getValue('currentSlide');
+    var totalSlides = sudoSlider.getValue('totalSlides');
+    var randomSlide = Math.floor(Math.random()*totalSlides+1);
+    while (randomSlide == currentSlide) {
+      randomSlide = Math.floor(Math.random()*totalSlides+1);
+    }
+    sudoSlider.goToSlide(randomSlide);
+  });
 
   $('#speed').blur( function() {
     var new_speed = $(this).val();

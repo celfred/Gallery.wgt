@@ -9,6 +9,7 @@
   "pad": "Tablette",
   "none": "Aucun",
   "speed": "Vitesse",
+  "random": "Bouton “Au hasard”",
   "index": "Afficher l'index",
   "help": "Aide",
   "theme": "Thème",

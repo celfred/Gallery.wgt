@@ -4,9 +4,9 @@
     <title>Gallery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/basic.css"/>
-    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/jquery.sudoSlider.js"></script>
+    <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.10.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.sudoSlider-3.1.6.min.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -63,6 +63,8 @@
                 <input type="checkbox" id="index_checkbox" checked="checked" />
                 <label for="speed"></label>
                 <input type="text" id="speed" size="4" maxLength="4" value="400" />
+                <label for="random"></label>
+                <input type="checkbox" id="random" checked="checked" />
               </div>
             </div>
             <ul class="slideshow"></ul>
@@ -75,7 +77,7 @@
 
       <tr>
         <td class="b_bottom_left"></td>
-        <td class="b_bottom_center"></td>
+        <td class="b_bottom_center"><span id="randomLink"> ? </span></td>
         <td class="b_bottom_right"></td>
       </tr>
     </table>

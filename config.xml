@@ -6,11 +6,12 @@
         width="900"
         height="650" 
         ub:resizable="false">     
-   
-		<name>Notes</name>
-		<author href="http://www.getuniboard.com"
-	            email="info@mnemis.com">Mnemis SA</author>
-		<description>Associer images</description>
-		
-		<content src="index.html"/>
+	<name>Gallery</name>
+  <author>Celfred</author>
+  <description>Image or whatever Gallery</description>
+  <content src="index.html"/>
+  <licence>
+  	Creative Commons ShareAlike 3.0
+      http://creativecommons.org/licenses/by-sa/3.0/
+  </licence>
 </widget>

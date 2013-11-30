@@ -9,6 +9,7 @@
   "pad": "Планшет",
   "none": "Нет",
   "speed": "Speed",
+  "random": "Random Picker",
   "index": "Show index",
   "help": "Помощь",
   "theme": "Тема",

@@ -461,6 +461,7 @@ li > div {
 }
 span#controls {
   position: absolute;
+  left: 100px;
   bottom: 0px;
 }
 span#controls ol li {
@@ -481,4 +482,11 @@ span#controls ol li.current a {
 span#controls ol li a {
   color: #FFF;
   text-decoration: none;
+}
+span#randomLink {
+  border: 1px solid #FFF;
+  padding: 4px;
+  border-radius: 10px;
+  background: #85E98D;
+  cursor: pointer;
 }
