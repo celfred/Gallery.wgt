@@ -161,21 +161,6 @@ body{
   list-style: none;
 }
 
-#custom-pager span {
-  cursor: pointer;
-  text-align: center;
-  padding: 3px;
-  border: 1px solid #000;
-  margin: 0px 5px;
-  font-size: 20px;
-  border-radius: 10px;
-  background: #FFF;
-  color: #000;
-}
-#custom-pager span.cycle-pager-active {
-  background: #000;
-  color: #FFF;
-}
 span#prevBtn a, span#nextBtn a{
   height: 100%;
   width: 47px;
@@ -473,4 +458,27 @@ li > div {
   margin:0;
   padding:0;
   list-style:none;
+}
+span#controls {
+  position: absolute;
+  bottom: 0px;
+}
+span#controls ol li {
+  list-style:none;
+  display: inline;
+  margin: 0px 5px;
+  background: #000;
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid #FFF;
+}
+span#controls ol li.current {
+  background: #FFF;
+}
+span#controls ol li.current a {
+  color: #000;
+}
+span#controls ol li a {
+  color: #FFF;
+  text-decoration: none;
 }

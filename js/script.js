@@ -6,6 +6,8 @@ var sankoreLang = {
   new_slide: "This is new slide.",
   wgt_name: "Gallery",
   slate: "slate",
+  speed: "Speed",
+  index: "Show index",
   pad: "tablet",
   none: "none",
   help: "Help",
@@ -30,6 +32,7 @@ var sankoreLang = {
 
 //some flags
 var mouse_state = false;
+var sudoSlider;
 
 //object for resize
 var resize_obj = {
@@ -50,8 +53,11 @@ function start(){
   $("#style_select option[value='1']").text(sankoreLang.slate);
   $("#style_select option[value='2']").text(sankoreLang.pad);
   $("#style_select option[value='3']").text(sankoreLang.none);
-  var tmpl = $("div.inline label").html();
-  $("div.inline label").html(sankoreLang.theme + tmpl)
+  $("#style_select").prev('label').text(sankoreLang.theme);
+  $("#speed").prev('label').text(sankoreLang.speed);
+  $("#index_checkbox").prev('label').text(sankoreLang.index);
+  //var tmpl = $("div.inline label").html();
+  //$("div.inline label").html(sankoreLang.theme + tmpl)
     
   if (window.sankore) {
     if(sankore.preference("etudier","")){
@@ -74,7 +80,7 @@ function start(){
       if(!$("#wgt_help").hasClass("open")){
         exportData();
         sankore.setPreference("etudier_style", $("#style_select").find("option:selected").val());
-        sankore.setPreference("etudier_cur_page", $("#slider").getPage());
+        sankore.setPreference("etudier_cur_page", sudoSlider.getValue('currentSlide'));
         sankore.setPreference("etudier_left_nav", $("#prevBtn a").css("display"));
         sankore.setPreference("etudier_right_nav", $("#nextBtn a").css("display"));
       }
@@ -88,12 +94,17 @@ function start(){
   $('#index_checkbox').click( function() {
     if ( $(this).is(':checked') ) {
       // Show index
-      $('#custom-pager').show();
+      $('#controls').show();
     } else {
       // Hide index
-      $('#custom-pager').hide();
+      $('#controls').hide();
     }
   })
+
+  $('#speed').blur( function() {
+    var new_speed = $(this).val();
+    sudoSlider.setOption('speed', new_speed);
+  });
 
   $("#wgt_help").click(function(){
     var tmp = $(this);
@@ -107,7 +118,7 @@ function start(){
       if (window.sankore) {
         exportData();
         sankore.setPreference("etudier_style", $("#style_select").find("option:selected").val());
-        sankore.setPreference("etudier_cur_page", $("#slider").getPage());
+        sankore.setPreference("etudier_cur_page", sudoSlider.getValue('currentSlide'));
         sankore.setPreference("etudier_left_nav", $("#prevBtn a").css("display"));
         sankore.setPreference("etudier_right_nav", $("#nextBtn a").css("display"));            
       }
@@ -186,7 +197,7 @@ function start(){
           tmpww = $(window).width();
           window.resizeTo(tmpww, tmpwh + 44)
           */
-          $("#slider li:not('.cycle-sentinel') > div").each(function(){
+          $("ul.slideshow > div > li > div").each(function(){
           var container = $(this);
           container.attr("ondragenter", "return false;")
           .attr("ondragleave", "$(this).css(\"background\",\"none\"); return false;")
@@ -350,9 +361,9 @@ function start(){
   //closing a slide
   $(document).on("click", ".close_slide", function(){
     $(this).parent().parent().remove();
-    var cur_li_index = $('.cycle-slideshow').data("cycle.opts").currSlide;
-    $(".cycle-slideshow").cycle('remove', cur_li_index);
-    // TODO : reinit slideshow to avoid number mess?
+    var currentSlide = sudoSlider.getValue('currentSlide');
+    sudoSlider.removeSlide(currentSlide);
+    resetIndex();
   });
     
   //adding new slides
@@ -378,10 +389,18 @@ function start(){
     $("<div class='add_right'>").appendTo(new_div);
     $("<div class='close_slide'>").appendTo(new_div);
     $("<div class='add_text'>").appendTo(new_div);
-    new_li.insertBefore(cur_li);
-    $(".cycle-slideshow").cycle('add', new_li).cycle('prev');
+    var currentSlide = sudoSlider.getValue('currentSlide');
+    sudoSlider.insertSlide(new_li, currentSlide-1);
+    sudoSlider.goToSlide(currentSlide);
+    resetIndex();
   });
-    
+  
+  resetIndex = function() {
+    $('#controls li span').each( function(i) {
+      $(this).text(i+1);
+    });
+  }
+
   $(document).on("click", ".add_right", function(){
     var cur_li = $(this).parent().parent();
     var new_li = $("<li>");
@@ -404,9 +423,10 @@ function start(){
     $("<div class='add_right'>").appendTo(new_div);
     $("<div class='close_slide'>").appendTo(new_div);
     $("<div class='add_text'>").appendTo(new_div);
-    new_li.insertAfter(cur_li);
-    $(".cycle-slideshow").cycle('add', new_li).cycle('next');
-    // TODO : Append only to slideshow...
+    var currentSlide = sudoSlider.getValue('currentSlide');
+    sudoSlider.insertSlide(new_li, currentSlide);
+    sudoSlider.goToSlide(currentSlide+1);
+    resetIndex();
   });
     
   $(document).on("click", ".add_text", function(){
@@ -488,7 +508,7 @@ function importData(data){
             .css("top", data[i].imgs[j].top)
             .css("left", data[i].imgs[j].left)
             .appendTo(div);
-            $("<img src='../../" + data[i].imgs[j].link + "' style='display: inline;' width='" + data[i].imgs[j].w + "' height='" + data[i].imgs[j].h + "'/>").appendTo(img_div);
+            $("<img src='" + data[i].imgs[j].link + "' style='display: inline;' width='" + data[i].imgs[j].w + "' height='" + data[i].imgs[j].h + "'/>").appendTo(img_div);
         }
         
         for(j in data[i].audio){
@@ -496,7 +516,7 @@ function importData(data){
             $("<div class='play'>").appendTo(audio_div);
             $("<div class='replay'>").appendTo(audio_div);
             var tmp_audio = $("<audio>").appendTo(audio_div);
-            $("<source src='../../" + data[i].audio[j].val + "' />").appendTo(tmp_audio);
+            $("<source src='" + data[i].audio[j].val + "' />").appendTo(tmp_audio);
             audio_div.draggable().css("position","absolute")
             .css("top", data[i].audio[j].top)
             .css("left", data[i].audio[j].left)
@@ -506,6 +526,14 @@ function importData(data){
         $("#slider ul").append(li);        
     }
     
+    sudoSlider = $(".slideshow").sudoSlider({
+      numeric: true,
+      effect: "slide",
+      prevNext: false,
+      customLink: '.customLink a',
+      speed: 400,
+    });
+
     $(window).trigger("resize")
     /*
     $("#slider").width(width).height(height).easySlider({
@@ -514,9 +542,9 @@ function importData(data){
         controlsShow: false
     });
     $("#slider").goToSlide(sankore.preference("etudier_cur_page",""));
-    */
     $("#prevBtn a").css("display", sankore.preference("etudier_left_nav",""));
     $("#nextBtn a").css("display", sankore.preference("etudier_right_nav",""));
+    */
 }
 
 //example
@@ -526,7 +554,6 @@ function showExample() {
   $("<div class='text_block test'><div class='real_text'>" + sankoreLang.text_content + "</div></div>").appendTo(div1).draggable();
   li1.width($("#slider").width()).height($("#slider").height());
   $("#slider ul").append(li1);
-  $("#slider ul").cycle('add', li1);
 
   var li2 = $("<li>");
   var div2 = $("<div>").appendTo(li2);
@@ -534,20 +561,18 @@ function showExample() {
   $("<img src=\"objects/1.gif\" style=\"display: inline;\" height=\"120\"/>").appendTo(img);
   li2.width($("#slider").width()).height($("#slider").height());
   $("#slider ul").append(li2);
-  $("#slider ul").cycle('add', li2);
 
   var li3 = $("<li>");
   var div3 = $("<div>").appendTo(li3);
   li3.width($("#slider").width()).height($("#slider").height());
   $("<div class='text_block'><div class='real_text'>" + sankoreLang.text_content + "</div></div>").appendTo(div3).draggable();
-  //var audio_block = $("<div class='audio_block'>").draggable().appendTo(div3);
-  //$("<div class='play'>").appendTo(audio_block);
-  //$("<div class='replay'>").appendTo(audio_block);
-  //var source = $("<source/>").attr("src", "../../objects/bateaux.mp3");
-  //var audio = $("<audio>").appendTo(audio_block);
-  //audio.append(source);
+  var audio_block = $("<div class='audio_block'>").draggable().appendTo(div3);
+  $("<div class='play'>").appendTo(audio_block);
+  $("<div class='replay'>").appendTo(audio_block);
+  var source = $("<source/>").attr("src", "objects/bateaux.mp3");
+  var audio = $("<audio>").appendTo(audio_block);
+  audio.append(source);
   $("#slider ul").append(li3);
-  $("#slider ul").cycle('add', li3);
 
   var li4 = $("<li>");
   var div4 = $("<div>").appendTo(li4);
@@ -562,10 +587,17 @@ function showExample() {
   //audio2.append(source2);
   li4.width($("#slider").width()).height($("#slider").height());
   $("#slider ul").append(li4);
-  $("#slider ul").cycle('add', li4);
 
   $(".text_block, .audio_block, .img_block").each(function(){
       $(this).css("position","absolute");
+  });
+
+  sudoSlider = $(".slideshow").sudoSlider({
+    numeric: true,
+    effect: "slide",
+    prevNext: false,
+    customLink: '.customLink a',
+    speed: 400,
   });
   
   $(window).trigger('resize');
